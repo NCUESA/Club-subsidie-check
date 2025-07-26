@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社團津貼申請與進度查詢</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
+
+        .club-subsidy-inquiry-app {
+            --brand-orange: #FFB74D;
+            --brand-orange-dark: #F57C00;
+            --accent-color: #4A90E2;
+            --bg-color: #fdfaf6;
+            --card-bg: #FFFFFF;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --border-color: #E0E0E0;
+            --error-color: #D32F2F;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 16px;
+            padding: 1px 0;
+        }
+
+        .club-subsidy-inquiry-app * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- 主要容器與佈局 --- */
+        .club-subsidy-inquiry-app .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* --- 卡片通用樣式 --- */
+        .club-subsidy-inquiry-app .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .club-subsidy-inquiry-app .card:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .club-subsidy-inquiry-app h1,
+        .club-subsidy-inquiry-app h2 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .club-subsidy-inquiry-app h2 {
+            font-size: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- 頁首 --- */
+        .club-subsidy-inquiry-app .main-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .club-subsidy-inquiry-app .main-header h1 {
+            font-size: 2.5rem;
+            color: var(--brand-orange-dark);
+        }
+
+        .club-subsidy-inquiry-app .main-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- 文件下載區 --- */
+        .club-subsidy-inquiry-app .downloads-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .club-subsidy-inquiry-app .downloads-table th,
+        .club-subsidy-inquiry-app .downloads-table td {
+            padding: 1rem 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .club-subsidy-inquiry-app .downloads-table th {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .club-subsidy-inquiry-app .downloads-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .club-subsidy-inquiry-app .downloads-table td:nth-child(1) {
+            font-weight: 500;
+        }
+
+        .club-subsidy-inquiry-app .file-icon {
+            text-align: center !important;
+        }
+
+        .club-subsidy-inquiry-app .file-icon img {
+            width: 28px;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .club-subsidy-inquiry-app .file-icon a:hover img {
+            transform: scale(1.2);
+        }
+
+        .club-subsidy-inquiry-app .apply-link {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .club-subsidy-inquiry-app .apply-link a {
+            color: var(--accent-color);
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .club-subsidy-inquiry-app .apply-link a:hover {
+            color: var(--brand-orange-dark);
+            text-decoration: underline;
+        }
+
+        /* --- 進度查詢區 --- */
+        .club-subsidy-inquiry-app .password-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .club-subsidy-inquiry-app #password {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .club-subsidy-inquiry-app #password:focus {
+            outline: none;
+            border-color: var(--brand-orange);
+            box-shadow: 0 0 0 3px rgba(255, 183, 77, 0.3);
+        }
+
+        .club-subsidy-inquiry-app #sub {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background-color: var(--brand-orange);
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .club-subsidy-inquiry-app #sub:hover {
+            background-color: var(--brand-orange-dark);
+            transform: translateY(-2px);
+        }
+
+        .club-subsidy-inquiry-app .error-message {
+            color: var(--error-color);
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            height: 1.2em;
+        }
+
+        /* --- 審核狀態結果區 --- */
+        .club-subsidy-inquiry-app .results-section.hidden {
+            display: none;
+        }
+
+        .club-subsidy-inquiry-app .table-wrapper {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+        }
+
+        .club-subsidy-inquiry-app .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .club-subsidy-inquiry-app .results-table th,
+        .club-subsidy-inquiry-app .results-table td {
+            padding: 0.8rem 1rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .club-subsidy-inquiry-app .results-table thead {
+            background-color: var(--brand-orange);
+            color: white;
+            font-weight: 500;
+        }
+
+        .club-subsidy-inquiry-app .results-table thead .super-header th {
+            background-color: var(--brand-orange-dark);
+        }
+
+        .club-subsidy-inquiry-app .results-table thead th {
+            border-color: var(--brand-orange-dark);
+        }
+
+        .club-subsidy-inquiry-app .results-table tbody tr:nth-child(even) {
+            background-color: #fffaf0;
+        }
+
+        .club-subsidy-inquiry-app .results-table tbody tr:hover {
+            background-color: #FFF3E0;
+        }
+
+        /* --- RWD --- */
+        @media (max-width: 768px) {
+            .club-subsidy-inquiry-app .main-header h1 {
+                font-size: 2rem;
+            }
+
+            .club-subsidy-inquiry-app .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="club-subsidy-inquiry-app">
+        <div class="container">
+            <header class="main-header">
+                <h1>社團津貼申請與進度查詢</h1>
+                <p>在此下載申請所需文件，並輸入您的查核密碼以追蹤審核進度。</p>
+            </header>
+
+            <div class="content-wrapper">
+                <section class="card downloads-section">
+                    <h2>B.【社團津貼申請表單】</h2>
+                    <table class="downloads-table">
+                        <thead>
+                            <tr>
+                                <th>檔案名稱</th>
+                                <th class="file-icon">.docx</th>
+                                <th class="file-icon">.pdf</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>學生會社團津貼申請流程</td>
+                                <td class="file-icon">-</td>
+                                <td class="file-icon">
+                                    <a href="http://ncuesa.ncue.edu.tw/ezfiles/37/1037/img/972/846419238.pdf"
+                                        rel="noopener" target="_blank" title="下載 PDF">
+                                        <img alt="PDF icon"
+                                            src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg" />
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>F-F-12 學生會社團津貼申請表</td>
+                                <td class="file-icon">
+                                    <a download="F-F-12 學生會社團津貼申請表.docx" href="/ezfiles/37/1037/img/972/202620192.docx"
+                                        target="_blank" title="下載 DOCX">
+                                        <img alt="DOCX icon"
+                                            src="https://upload.wikimedia.org/wikipedia/commons/f/fb/.docx_icon.svg" />
+                                    </a>
+                                </td>
+                                <td class="file-icon">
+                                    <a href="/ezfiles/37/1037/img/972/142283707.pdf" target="_blank" title="下載 PDF">
+                                        <img alt="PDF icon"
+                                            src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg" />
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="apply-link">
+                        <span>社團津貼申請連結：</span>
+                        <a href="https://forms.gle/zixr6cL78f9v5ci88" rel="noopener" target="_blank">點此前去申請</a>
+                    </div>
+                </section>
+
+                <section class="card password-section">
+                    <h2>進度查詢</h2>
+                    <p>請輸入您的查核密碼：</p>
+                    <div class="password-form">
+                        <input id="password" placeholder="請輸入密碼..." type="password" />
+                        <button id="sub" type="button">確認</button>
+                    </div>
+                    <p class="error-message" id="error-message"> </p>
+                </section>
+
+                <section class="card results-section hidden" id="results-container">
+                    <h2>審核狀態</h2>
+                    <div class="table-wrapper">
+                        <table class="results-table" id="checkStatus">
+                            <!-- 表格內容將由 JavaScript 動態生成 -->
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // --- Google Sheets API 設定 ---
+            var spreadsheet_id = "1HPZ6lbAu615E3JEnxIO4SHDVUWQu2FtZvGtXDQC9rhM",
+                tab_name = "sheet2",
+                api_key = "AIzaSyD4Oxgb4ZMw6zt-41DZXQZzyxquiAKd1yc",
+                url = "https://sheets.googleapis.com/v4/spreadsheets/" + spreadsheet_id + "/values/" + tab_name + "?key=" + api_key;
+
+            var data = [];
+
+            $.getJSON(url, function (json) {
+                if (json.values) {
+                    data = json.values;
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                let errorText = "無法載入資料，請檢查網路連線。";
+                const errorElement = $(".club-subsidy-inquiry-app #error-message");
+                if (errorThrown && errorThrown.includes("API key not valid")) {
+                    errorText = "無法載入資料，API 金鑰設定錯誤或權限不足。";
+                }
+                errorElement.text(errorText).css('visibility', 'visible');
+            });
+
+            var resultIndexes = [];
+
+            function search(data, target) {
+                resultIndexes = [];
+                for (let i = 2; i < data.length; i++) {
+                    if (data[i] && data[i][20] === target) {
+                        resultIndexes.push(i);
+                    }
+                }
+                return resultIndexes.length > 0;
+            }
+
+            function buildResultsTable(table, indexes, data) {
+                table.empty();
+                const thead = $('<thead>');
+                thead.append(
+                    $('<tr class="super-header">').append(
+                        $('<th colspan="5">').text('初審（財務部）'),
+                        $('<th colspan="3">').text('複審（會長部）'),
+                        $('<th colspan="5">').text('活動資料')
+                    )
+                );
+                thead.append(
+                    $('<tr>').append(
+                        $('<th>').text('審核人'),
+                        $('<th>').text('審核日期'),
+                        $('<th>').text('審核結果'),
+                        $('<th>').text('通過金額'),
+                        $('<th>').text('實際核銷金額'),
+                        $('<th>').text('審核人'),
+                        $('<th>').text('審核日期'),
+                        $('<th>').text('審核結果'),
+                        $('<th>').text('申請進度'),
+                        $('<th>').text('匯款金額'),
+                        $('<th>').text('備註'),
+                        $('<th>').text('活動名稱'),
+                        $('<th>').text('活動日期')
+                    )
+                );
+                table.append(thead);
+
+                const tbody = $('<tbody>');
+                indexes.forEach(function (rowIndex) {
+                    const rowData = data[rowIndex];
+                    const tr = $('<tr>');
+                    const columns = [
+                        { data: rowData[0] }, { data: rowData[1] },
+                        { data: rowData[2] }, { data: rowData[4] },
+                        { data: rowData[5] }, { data: rowData[6] },
+                        { data: rowData[7] }, { data: rowData[8] },
+                        { data: (rowData[10] || "尚未審核") },
+                        { data: rowData[11] }, { data: rowData[12] },
+                        { data: rowData[18] }, { data: rowData[19] }
+                    ];
+                    columns.forEach(col => {
+                        tr.append($('<td>').text(col.data || ''));
+                    });
+                    tbody.append(tr);
+                });
+                table.append(tbody);
+            }
+
+            function check() {
+                var password = $("#password").val();
+                var errorMessage = $("#error-message");
+                var resultsContainer = $("#results-container");
+                var table = $("#checkStatus");
+                errorMessage.text("").css('visibility', 'hidden');
+
+                if (!password) {
+                    errorMessage.text("請輸入密碼。").css('visibility', 'visible');
+                    return;
+                }
+                if (search(data, password)) {
+                    buildResultsTable(table, resultIndexes, data);
+                    resultsContainer.slideDown().removeClass('hidden');
+                } else {
+                    errorMessage.text("密碼輸入錯誤或查無資料。").css('visibility', 'visible');
+                    resultsContainer.slideUp();
+                }
+            }
+
+            $("#sub").click(check);
+            $("#password").keyup(function (event) {
+                if (event.which === 13) {
+                    $("#sub").click();
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

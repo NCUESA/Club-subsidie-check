@@ -1,86 +1,93 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社團津貼查詢</title>
+    <title>社團津貼申請與進度查詢</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <div class="club-subsidy-inquiry-app">
+        <div class="container">
+            <header class="main-header">
+                <h1>社團津貼申請與進度查詢</h1>
+                <p>在此下載申請所需文件，並輸入您的查核密碼以追蹤審核進度。</p>
+            </header>
 
-    <div class="container">
-        <header class="main-header">
-            <h1>社團津貼申請與進度查詢</h1>
-            <p>在此下載申請所需文件，並輸入您的查核密碼以追蹤審核進度。</p>
-        </header>
+            <div class="content-wrapper">
+                <section class="card downloads-section">
+                    <h2>B.【社團津貼申請表單】</h2>
+                    <table class="downloads-table">
+                        <thead>
+                            <tr>
+                                <th>檔案名稱</th>
+                                <th class="file-icon">.docx</th>
+                                <th class="file-icon">.pdf</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>學生會社團津貼申請流程</td>
+                                <td class="file-icon">-</td>
+                                <td class="file-icon">
+                                    <a href="http://ncuesa.ncue.edu.tw/ezfiles/37/1037/img/972/846419238.pdf"
+                                        rel="noopener" target="_blank" title="下載 PDF">
+                                        <img alt="PDF icon"
+                                            src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg" />
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>F-F-12 學生會社團津貼申請表</td>
+                                <td class="file-icon">
+                                    <a download="F-F-12 學生會社團津貼申請表.docx" href="/ezfiles/37/1037/img/972/202620192.docx"
+                                        target="_blank" title="下載 DOCX">
+                                        <img alt="DOCX icon"
+                                            src="https://upload.wikimedia.org/wikipedia/commons/f/fb/.docx_icon.svg" />
+                                    </a>
+                                </td>
+                                <td class="file-icon">
+                                    <a href="/ezfiles/37/1037/img/972/142283707.pdf" target="_blank" title="下載 PDF">
+                                        <img alt="PDF icon"
+                                            src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg" />
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="apply-link">
+                        <span>社團津貼申請連結：</span>
+                        <a href="https://forms.gle/zixr6cL78f9v5ci88" rel="noopener" target="_blank">點此前去申請</a>
+                    </div>
+                </section>
 
-        <!-- 文件下載區 -->
-        <section class="card downloads-section">
-            <h2>B.【社團津貼申請表單】</h2>
-            <table class="downloads-table">
-                <thead>
-                    <tr>
-                        <th>檔案名稱</th>
-                        <th>.docx</th>
-                        <th>.pdf</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>學生會社團津貼申請流程</td>
-                        <td class="file-icon">-</td>
-                        <td class="file-icon">
-                            <a href="http://ncuesa.ncue.edu.tw/ezfiles/37/1037/img/972/846419238.pdf" target="_blank" rel="noopener" title="下載 PDF">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg" alt="PDF icon" />
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>F-F-12 學生會社團津貼申請表</td>
-                        <td class="file-icon">
-                            <a download="F-F-12 學生會社團津貼申請表.docx" href="/ezfiles/37/1037/img/972/202620192.docx" target="_blank" title="下載 DOCX">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/.docx_icon.svg" alt="DOCX icon" />
-                            </a>
-                        </td>
-                        <td class="file-icon">
-                            <a href="/ezfiles/37/1037/img/972/142283707.pdf" target="_blank" title="下載 PDF">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg" alt="PDF icon" />
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="apply-link">
-                <span>社團津貼申請連結：</span>
-                <a href="https://forms.gle/zixr6cL78f9v5ci88" target="_blank" rel="noopener">點此前去申請</a>
+                <section class="card password-section">
+                    <h2>進度查詢</h2>
+                    <p>請輸入您的查核密碼：</p>
+                    <div class="password-form">
+                        <input id="password" placeholder="請輸入密碼..." type="password" />
+                        <button id="sub" type="button">確認</button>
+                    </div>
+                    <p class="error-message" id="error-message"> </p>
+                </section>
+
+                <section class="card results-section hidden" id="results-container">
+                    <h2>審核狀態</h2>
+                    <div class="table-wrapper">
+                        <table class="results-table" id="checkStatus">
+                            <!-- 表格內容將由 JavaScript 動態生成 -->
+                        </table>
+                    </div>
+                </section>
             </div>
-        </section>
-
-        <!-- 密碼輸入區 -->
-        <section class="card password-section">
-            <h2>進度查詢</h2>
-            <p>請輸入您的查核密碼：</p>
-            <div class="password-form">
-                <input id="password" type="password" placeholder="請輸入密碼...">
-                <button id="sub" type="button">確認</button>
-            </div>
-            <p id="error-message" class="error-message"></p>
-        </section>
-
-        <!-- 審核狀態結果區 (預設隱藏) -->
-        <section id="results-container" class="results-section hidden">
-            <h2>審核狀態</h2>
-            <div class="table-wrapper">
-                <table id="checkStatus" class="results-table">
-                    <!-- 表格內容將由 JavaScript 動態生成 -->
-                </table>
-            </div>
-        </section>
-
+        </div>
     </div>
-
-    <!-- 引入 jQuery 和外部 JS 檔案 -->
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+    
     <script src="script.js"></script>
+
 </body>
+
 </html>
