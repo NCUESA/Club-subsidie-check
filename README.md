@@ -69,9 +69,9 @@
 
 ```javascript
 // --- Google Sheets API 設定 ---
-var spreadsheet_id = "1HPZ6lbAu615E3JEnxIO4SHDVUWQu2FtZvGtXDQC9rhM", // 填入「試算表 ID」
-    tab_name = "sheet2", // 填入「工作表名稱」
-    api_key = "AIzaSyD4Oxgb4ZMw6zt-41DZXQZzyxquiAKd1yc", // 填入「API 金鑰」
+var spreadsheet_id = "", // 填入「試算表 ID」
+    tab_name = "", // 填入「工作表名稱」
+    api_key = "", // 填入「API 金鑰」
     url = "https://sheets.googleapis.com/v4/spreadsheets/" + spreadsheet_id + "/values/" + tab_name + "?key=" + api_key;
 ```
 *   **試算表 ID**：可以從試算表的網址中找到，例如 `.../spreadsheets/d/`**`[這一段就是ID]`**`/edit#gid=0`。
